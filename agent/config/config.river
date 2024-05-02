@@ -1,0 +1,20 @@
+logging {
+  level = "debug"
+  format = "logfmt"
+}
+
+pyroscope.write "example" {
+  endpoint {
+    url = "http://pyroscope:4040"
+  }
+  external_labels = {
+    "env" = "demo",
+  }
+}
+
+pyroscope.scrape "default" {
+  targets = [
+    {"__address__" = "demo:6060", "service_name"="demo"},
+  ]
+  forward_to = [pyroscope.write.example.receiver]
+}
